@@ -1,0 +1,6 @@
+<div class="container">
+    <app-header-bar [attUserName]="userName"></app-header-bar>
+    <app-nav-bar [attUserName]="userName" (updateUserNameEvent)="getNewUserName($event)"></app-nav-bar>
+    <app-main-page></app-main-page>
+    <app-footer-bar></app-footer-bar>
+</div>

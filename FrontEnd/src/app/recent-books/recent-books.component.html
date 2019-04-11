@@ -1,0 +1,22 @@
+<table *ngIf="showTable" class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Book Name</th>
+        <th scope="col">Author Name</th>
+        <th scope="col">Is Available</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let book of booksList; let i = index">
+        <th scope="row">{{i}}</th>
+        <td>{{book.bookName}}</td>
+        <td>{{book.authorName}}</td>
+        <td>{{book.isAvailable}}</td>
+        <td>
+          <button>Select Book</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>

@@ -1,0 +1,28 @@
+/* @media(min-width: 800px) {
+    h1 {
+        background-color: red;
+    }
+
+    .col-md-1 {
+        width: 8%;
+    }
+
+    .col-md-6 {
+        width: 50%
+    }
+}
+
+@media(max-width: 800px) {
+
+    h1 {
+        background-color: yellow;
+    }
+
+    .col-sm-1 {
+        width: 8%;
+    }
+
+    .col-sm-12 {
+        width: 100%;
+    }
+} */
