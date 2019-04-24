@@ -4,19 +4,6 @@ var router = express.Router();
 
 var Book = require('./bookModel');
 
-// var booksList = [{
-//     bookName: "Story of my life	",
-//     authorName: "Helen Kelen",
-//     isAvailable: true
-//   },
-//   {
-//     bookName: "Story of everyone life	",
-//     authorName: "Kelen Helen",
-//     isAvailable: false,
-//     bookVersion: "1.1.1"
-//   }
-//   ];
-
 router.get('/', (req, res) => {
     console.log("books api called");
     res.send("Books api called");

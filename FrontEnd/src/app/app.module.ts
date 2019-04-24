@@ -12,11 +12,13 @@ import { RequestBookComponent } from './request-book/request-book.component';
 import { RouterModule, Routes} from '@angular/router';
 import { RecentBooksComponent } from './recent-books/recent-books.component';
 import { AddBookComponent } from './add-book/add-book.component';
+import { EditBookComponent } from './edit-book/edit-book.component';
 
 const routes: Routes = [
   {path: "", component: RecentBooksComponent },
   {path: "requestBook", component: RequestBookComponent },
-  {path: "addBook", component: AddBookComponent }
+  {path: "addBook", component: AddBookComponent },
+  {path: "editBook", component: EditBookComponent }
 ]
 
 @NgModule({
@@ -28,7 +30,8 @@ const routes: Routes = [
     FooterBarComponent,
     RequestBookComponent,
     RecentBooksComponent,
-    AddBookComponent
+    AddBookComponent,
+    EditBookComponent
   ],
   imports: [
     BrowserModule,
