@@ -58,12 +58,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _book_data_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../book-data.service */ "./src/app/book-data.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+
 
 
 
 var AddBookComponent = /** @class */ (function () {
-    function AddBookComponent(bookDataService) {
+    function AddBookComponent(bookDataService, router) {
         this.bookDataService = bookDataService;
+        this.router = router;
         this.newBook = {
             bookName: "Old Value"
         };
@@ -71,9 +74,15 @@ var AddBookComponent = /** @class */ (function () {
     AddBookComponent.prototype.ngOnInit = function () {
     };
     AddBookComponent.prototype.submitBook = function () {
+        var _this = this;
         console.log("The new book value is: " + this.newBook.bookName);
         var dataObject = JSON.parse(JSON.stringify(this.newBook));
-        this.bookDataService.addNewBook(dataObject).subscribe();
+        this.bookDataService.addNewBook(dataObject).subscribe(function (response) {
+            alert("Book added successfully");
+            _this.router.navigateByUrl("");
+        }, function (error) {
+            alert("Error adding book, please try again");
+        });
     };
     AddBookComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -81,7 +90,7 @@ var AddBookComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./add-book.component.html */ "./src/app/add-book/add-book.component.html"),
             styles: [__webpack_require__(/*! ./add-book.component.css */ "./src/app/add-book/add-book.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_book_data_service__WEBPACK_IMPORTED_MODULE_2__["BookDataService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_book_data_service__WEBPACK_IMPORTED_MODULE_2__["BookDataService"], _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"]])
     ], AddBookComponent);
     return AddBookComponent;
 }());
@@ -173,6 +182,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _recent_books_recent_books_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./recent-books/recent-books.component */ "./src/app/recent-books/recent-books.component.ts");
 /* harmony import */ var _add_book_add_book_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./add-book/add-book.component */ "./src/app/add-book/add-book.component.ts");
+/* harmony import */ var _edit_book_edit_book_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./edit-book/edit-book.component */ "./src/app/edit-book/edit-book.component.ts");
+
 
 
 
@@ -190,7 +201,8 @@ __webpack_require__.r(__webpack_exports__);
 var routes = [
     { path: "", component: _recent_books_recent_books_component__WEBPACK_IMPORTED_MODULE_12__["RecentBooksComponent"] },
     { path: "requestBook", component: _request_book_request_book_component__WEBPACK_IMPORTED_MODULE_10__["RequestBookComponent"] },
-    { path: "addBook", component: _add_book_add_book_component__WEBPACK_IMPORTED_MODULE_13__["AddBookComponent"] }
+    { path: "addBook", component: _add_book_add_book_component__WEBPACK_IMPORTED_MODULE_13__["AddBookComponent"] },
+    { path: "editBook", component: _edit_book_edit_book_component__WEBPACK_IMPORTED_MODULE_14__["EditBookComponent"] }
 ];
 var AppModule = /** @class */ (function () {
     function AppModule() {
@@ -205,7 +217,8 @@ var AppModule = /** @class */ (function () {
                 _footer_bar_footer_bar_component__WEBPACK_IMPORTED_MODULE_9__["FooterBarComponent"],
                 _request_book_request_book_component__WEBPACK_IMPORTED_MODULE_10__["RequestBookComponent"],
                 _recent_books_recent_books_component__WEBPACK_IMPORTED_MODULE_12__["RecentBooksComponent"],
-                _add_book_add_book_component__WEBPACK_IMPORTED_MODULE_13__["AddBookComponent"]
+                _add_book_add_book_component__WEBPACK_IMPORTED_MODULE_13__["AddBookComponent"],
+                _edit_book_edit_book_component__WEBPACK_IMPORTED_MODULE_14__["EditBookComponent"]
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
@@ -250,7 +263,16 @@ var BookDataService = /** @class */ (function () {
     };
     BookDataService.prototype.addNewBook = function (newBook) {
         return this.httpClient.post("http://localhost:8080/book/addNewBook", newBook);
-        // this.booksList.push(newBook)
+    };
+    BookDataService.prototype.updateBook = function (book) {
+        var bookId = book._id;
+        return this.httpClient.put("http://localhost:8080/book/updateBook?id=" + bookId, book);
+    };
+    BookDataService.prototype.setSelectedBookForEdit = function (selectedBook) {
+        this.selectedBookForEdit = selectedBook;
+    };
+    BookDataService.prototype.getSelectedBookForEdit = function () {
+        return this.selectedBookForEdit;
     };
     BookDataService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -259,6 +281,80 @@ var BookDataService = /** @class */ (function () {
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
     ], BookDataService);
     return BookDataService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/edit-book/edit-book.component.css":
+/*!***************************************************!*\
+  !*** ./src/app/edit-book/edit-book.component.css ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2VkaXQtYm9vay9lZGl0LWJvb2suY29tcG9uZW50LmNzcyJ9 */"
+
+/***/ }),
+
+/***/ "./src/app/edit-book/edit-book.component.html":
+/*!****************************************************!*\
+  !*** ./src/app/edit-book/edit-book.component.html ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"container\">\n  <form>\n    <div class=\"form-group\">\n      <label for=\"bookName\">Book Name</label>\n      <input type=\"text\" class=\"form-control\" placeholder=\"Enter book name\" name=\"bookName\" [(ngModel)]=\"selectedBook.bookName\">\n    </div>\n    <div class=\"form-group\">\n      <label for=\"authorName\">Author Name</label>\n      <input type=\"text\" class=\"form-control\" name=\"authorName\" [(ngModel)]=\"selectedBook.authorName\">\n    </div>\n    <div class=\"form-group form-check\">\n      <input type=\"checkbox\" class=\"form-check-input\" name=\"isAvailable\" [(ngModel)]=\"selectedBook.isAvailable\">\n      <label class=\"form-check-label\" for=\"isAvailable\">isAvailable</label>\n    </div>\n    <div class=\"form-group\">\n      <label for=\"bookVersion\">Book Version</label>\n      <input type=\"text\" class=\"form-control\" name=\"bookVersion\" [(ngModel)]=\"selectedBook.bookVersion\">\n    </div>\n    <button class=\"btn btn-primary\" (click)=\"updateBook()\">Submit</button>\n  </form>\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/edit-book/edit-book.component.ts":
+/*!**************************************************!*\
+  !*** ./src/app/edit-book/edit-book.component.ts ***!
+  \**************************************************/
+/*! exports provided: EditBookComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EditBookComponent", function() { return EditBookComponent; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _book_data_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../book-data.service */ "./src/app/book-data.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+
+
+
+
+var EditBookComponent = /** @class */ (function () {
+    function EditBookComponent(bookDataService, router) {
+        this.bookDataService = bookDataService;
+        this.router = router;
+    }
+    EditBookComponent.prototype.ngOnInit = function () {
+        this.selectedBook = this.bookDataService.getSelectedBookForEdit();
+        console.log("Selected book in edit book component is: " + JSON.stringify(this.selectedBook));
+    };
+    EditBookComponent.prototype.updateBook = function () {
+        var _this = this;
+        this.bookDataService.updateBook(this.selectedBook).subscribe(function (response) {
+            console.log(response);
+            alert("Book details updated successfully");
+            _this.router.navigateByUrl('');
+        }, function (error) {
+            alert("error updateing book");
+        });
+    };
+    EditBookComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
+            selector: 'app-edit-book',
+            template: __webpack_require__(/*! ./edit-book.component.html */ "./src/app/edit-book/edit-book.component.html"),
+            styles: [__webpack_require__(/*! ./edit-book.component.css */ "./src/app/edit-book/edit-book.component.css")]
+        }),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_book_data_service__WEBPACK_IMPORTED_MODULE_2__["BookDataService"], _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"]])
+    ], EditBookComponent);
+    return EditBookComponent;
 }());
 
 
@@ -533,7 +629,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<table *ngIf=\"showTable\" class=\"table\">\n    <thead>\n      <tr>\n        <th scope=\"col\">#</th>\n        <th scope=\"col\">Book Name</th>\n        <th scope=\"col\">Author Name</th>\n        <th scope=\"col\">Is Available</th>\n        <th>Action</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr *ngFor=\"let book of booksList; let i = index\">\n        <th scope=\"row\">{{i}}</th>\n        <td>{{book.bookName}}</td>\n        <td>{{book.authorName}}</td>\n        <td>{{book.isAvailable}}</td>\n        <td>\n          <button>Select Book</button>\n        </td>\n      </tr>\n    </tbody>\n  </table>"
+module.exports = "<table *ngIf=\"showTable\" class=\"table\">\n    <thead>\n      <tr>\n        <th scope=\"col\">#</th>\n        <th scope=\"col\">Book Name</th>\n        <th scope=\"col\">Author Name</th>\n        <th scope=\"col\">Is Available</th>\n        <th>Action</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr *ngFor=\"let book of booksList; let i = index\">\n        <th scope=\"row\">{{i+1}}</th>\n        <td>{{book.bookName}}</td>\n        <td>{{book.authorName}}</td>\n        <td>{{book.isAvailable}}</td>\n        <td>\n          <button (click)=\"editBook(book)\">Edit Book</button>\n          <button (click)=\"deleteBook()\">Delete Book</button>\n        </td>\n      </tr>\n    </tbody>\n  </table>"
 
 /***/ }),
 
@@ -550,12 +646,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _book_data_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../book-data.service */ "./src/app/book-data.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+
 
 
 
 var RecentBooksComponent = /** @class */ (function () {
-    function RecentBooksComponent(bookDataService) {
+    function RecentBooksComponent(bookDataService, router) {
         this.bookDataService = bookDataService;
+        this.router = router;
         this.showTable = true;
     }
     RecentBooksComponent.prototype.ngOnInit = function () {
@@ -564,6 +663,13 @@ var RecentBooksComponent = /** @class */ (function () {
             _this.booksList = response;
             console.log("The response is: ", response);
         });
+    };
+    RecentBooksComponent.prototype.editBook = function (selectedBook) {
+        this.bookDataService.setSelectedBookForEdit(selectedBook);
+        this.router.navigateByUrl('editBook');
+    };
+    RecentBooksComponent.prototype.deleteBook = function () {
+        console.log('delete book called');
     };
     RecentBooksComponent.prototype.toggleTableVisibility = function () {
         this.showTable = !this.showTable;
@@ -574,7 +680,7 @@ var RecentBooksComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./recent-books.component.html */ "./src/app/recent-books/recent-books.component.html"),
             styles: [__webpack_require__(/*! ./recent-books.component.css */ "./src/app/recent-books/recent-books.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_book_data_service__WEBPACK_IMPORTED_MODULE_2__["BookDataService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_book_data_service__WEBPACK_IMPORTED_MODULE_2__["BookDataService"], _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"]])
     ], RecentBooksComponent);
     return RecentBooksComponent;
 }());
@@ -700,7 +806,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\Vaibhav\UCA-2019\my-app\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! D:\Vaibhav\UCA-2019\FrontEnd\src\main.ts */"./src/main.ts");
 
 
 /***/ })
